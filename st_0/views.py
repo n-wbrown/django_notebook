@@ -4,6 +4,10 @@ from django.views.generic import TemplateView
 
 from django.http import HttpResponse
 
+from .models import box 
+from django.db.models import Q
+
+
 
 class HomePageView(TemplateView):
     def get(self, request, **kwargs):
@@ -16,3 +20,9 @@ class AboutPageView(TemplateView):
 
 def raw_response(request):
     return HttpResponse("<p>This is a raw response page</p><p>end</p>")
+
+def box_list(request):
+    box_list = box.objects.filter(mass__gte=2.0)
+    context = {'heavy_items':box_list}
+    return render(request, 'list.html', context)
+

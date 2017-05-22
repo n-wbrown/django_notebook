@@ -1,0 +1,17 @@
+<DOCCTYPE html>
+<html lang="en">
+<body>
+
+{% if heavy_items %}
+    <ul>
+    {% for box in heavy_items %}
+        <li>{{ box.box_name }} : {{box.box_color}} : {{box.mass}}kg</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No boxes are available.</p>
+{% endif %}
+
+</body>
+</html>
+
