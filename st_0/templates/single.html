@@ -1,0 +1,36 @@
+<DOCCTYPE html>
+<html lang="en">
+<body>
+<!--
+{% if heavy_items %}
+    <ul>
+    {% for box in heavy_items %}
+        <li>{{ box.box_name }} : {{box.box_color}} : {{box.mass}}kg</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No boxes are available.</p>
+{% endif %}
+-->
+{% if args %}
+    <p>using args</p>
+    <br>
+    {% for box in target %}
+        <p>{{ box.box_name }} : {{box.box_color}} : {{box.mass}}kg</p>
+        <br>
+    {% endfor %}
+{% endif %}
+
+{% if kwargs %}
+    <p>using kwargs</p>
+    <br>
+    {% for box in target %}
+        <p>{{ box.box_name }} : {{box.box_color}} : {{box.mass}}kg</p>
+        <br>
+    {% endfor %}
+{% endif %}
+
+<a href="/st/">Return home</a>
+</body>
+</html>
+

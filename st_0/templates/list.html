@@ -5,13 +5,18 @@
 {% if heavy_items %}
     <ul>
     {% for box in heavy_items %}
-        <li>{{ box.box_name }} : {{box.box_color}} : {{box.mass}}kg</li>
+        <li>{{ box.box_name }} : {{box.box_color}} : {{box.mass}}kg
+        --<a href="../box{{box.pk}}">unnamed (args) link</a>
+        -- <a href="../bbox{{box.pk}}">named (kwargs) link</a>
+        </li>
     {% endfor %}
     </ul>
 {% else %}
     <p>No boxes are available.</p>
 {% endif %}
 
+
+<a href="/st/">Return home</a>
 </body>
 </html>
 

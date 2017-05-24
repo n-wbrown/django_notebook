@@ -19,4 +19,14 @@ from django.contrib import admin
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^st/', include('st_0.urls'))
+    #url(r'^', include('st_0.urls'))
+]
+
+
+#Add URL maps to redirect the base URL to our application
+#The permanent flag sets error code to 301, 302, false (302) by defautle
+# ^ not important
+from django.views.generic import RedirectView
+urlpatterns += [
+    url(r'^$', RedirectView.as_view(url='/st/', permanent=True)),
 ]
