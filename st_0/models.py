@@ -12,5 +12,7 @@ class box(models.Model):
     )
     box_color = models.CharField(max_length=3,choices=colors,default='red')
     mass = models.DecimalField(max_digits=5,decimal_places=2)
-
+    
+    def __str__(self):
+        return self.box_name
 

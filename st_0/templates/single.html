@@ -30,7 +30,9 @@
     {% endfor %}
 {% endif %}
 
-<a href="/st/">Return home</a>
+<a href="{% url 'list' %}">Return to list</a>
+<br>
+<a href="{% url 'home' %}">Return home</a>
 </body>
 </html>
 

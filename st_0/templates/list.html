@@ -6,8 +6,10 @@
     <ul>
     {% for box in heavy_items %}
         <li>{{ box.box_name }} : {{box.box_color}} : {{box.mass}}kg
-        --<a href="../box{{box.pk}}">unnamed (args) link</a>
+        -- <a href="../box{{box.pk}}">unnamed (args) link</a> 
+        -- <a href="{% url 'args' box.pk %}">unnamed (generated args) link </a> 
         -- <a href="../bbox{{box.pk}}">named (kwargs) link</a>
+        -- <a href="{% url 'kwargs' box.pk %}">named (generated kwargs) link </a> 
         </li>
     {% endfor %}
     </ul>
@@ -16,7 +18,8 @@
 {% endif %}
 
 
-<a href="/st/">Return home</a>
+<!--<a href="/st/">Return home</a>-->
+<a href="{% url 'home' %}">Return home</a>
 </body>
 </html>
 
