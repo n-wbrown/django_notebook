@@ -10,6 +10,7 @@
         -- <a href="{% url 'args' box.pk %}">unnamed (generated args) link </a> 
         -- <a href="../bbox{{box.pk}}">named (kwargs) link</a>
         -- <a href="{% url 'kwargs' box.pk %}">named (generated kwargs) link </a> 
+        -- <a href="{% url 'class' box.pk %}">detail view</a> 
         </li>
     {% endfor %}
     </ul>

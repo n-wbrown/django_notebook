@@ -7,11 +7,14 @@ from django.http import HttpResponse
 from .models import box 
 from django.db.models import Q
 
+from django.views import generic
 
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 
 class HomePageView(TemplateView):
     def get(self, request, **kwargs):
-        return render(request, 'index.html', context=None)
+        return render(request, 'index.html', context={'user':request.user,})
 
 class AboutPageView(TemplateView):
 #    def get(self, request, **kwargs):
@@ -41,3 +44,9 @@ def single(request,*args,**kwargs):
     context = {'args':args,'kwargs':kwargs,'target':target}
     #selected_box = box.objects.flter(pk=
     return render(request,"single.html",context)
+
+#@login_required(login_url="accounts/login/")
+@method_decorator(login_required,name='dispatch')
+class boxDetailView(generic.DetailView):
+    model = box
+    template_name = 'box_detail.html'
