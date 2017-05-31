@@ -1,7 +1,5 @@
-<DOCCTYPE html>
-<html lang="en">
-<body>
-
+{% extends 'debug_base.html' %}
+{%block content%}
 {% if heavy_items %}
     <ul>
     {% for box in heavy_items %}
@@ -21,6 +19,5 @@
 
 <!--<a href="/st/">Return home</a>-->
 <a href="{% url 'home' %}">Return home</a>
-</body>
-</html>
+{%endblock%}
 
