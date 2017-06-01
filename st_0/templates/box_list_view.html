@@ -1,0 +1,57 @@
+{% extends 'debug_base.html' %}
+
+{% block title %}
+    Generic.Listview
+{% endblock %}
+
+{% block subtitle %}
+    test functionality of the generic.ListView w/ pagination
+{% endblock %}
+
+{% block content%}
+    <div class="container-fluid">
+    {% if box  %}
+    <h2>table of boxes</h2>
+    <p>list boxes in bootstrap formatted table</p>
+    <table class="table table-sm">
+    <thead>
+        <tr>
+            <th>name</th>
+            <th>number</th>
+            <th>mass</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for b in box  %}
+        <tr>
+            <th>{{b.box_name}}</th>
+            <th>{{b.pk}}</th>
+            <th>{{b.mass}}</th>
+        </tr>
+    {% endfor %}
+    </tbody>
+    </table>
+    {% endif %}
+    </div>
+
+
+
+
+
+{% if is_paginated %}
+	<div class="pagination">
+    	<span class="page-links">
+        	{% if page_obj.has_previous %}
+            	<a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+        	{% endif %}
+            <span class="page-current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            	{% if page_obj.has_next %}
+                  	<a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+            	{% endif %}
+		</span>
+	</div>
+{% endif %}
+
+{% endblock %}

@@ -50,3 +50,12 @@ def single(request,*args,**kwargs):
 class boxDetailView(generic.DetailView):
     model = box
     template_name = 'box_detail.html'
+
+
+#@login_required(login_url="accounts/login/")
+@method_decorator(login_required,name='dispatch')
+class boxListView(generic.ListView):
+    model = box
+    template_name = 'box_list_view.html'
+    context_object_name = 'box'
+    paginate_by=1
