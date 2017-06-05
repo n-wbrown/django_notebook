@@ -1,0 +1,44 @@
+{% extends 'debug_base.html'%}
+
+{% block title %}
+Add box
+{% endblock %}
+
+{% block content%}
+<form action="" method="post">
+    {% csrf_token %}
+    <table>
+    <!--{{ form }}-->
+    <br>  
+    <div class="form-group row">
+        <label for="id_new_name"class="col-sm-2 col-form-label">
+            {{form.new_name.label}}:
+        </label>
+        <div class="col-sm-8">
+        {{form.new_name}}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="id_new_name"class="col-sm-2 col-form-label">
+            {{form.new_mass.label}}:
+        </label>
+        <div class="col-sm-8">
+        {{form.new_mass}}
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label for="id_new_name"class="col-sm-2 col-form-label">
+            {{form.new_color.label}}:
+        </label>
+        <div class="col-sm-8">
+        {{form.new_color}} 
+        </div>
+    </div>
+    
+    </table>
+    <input type="submit" value="Submit" />
+</form>
+<br> 
+{% endblock %}

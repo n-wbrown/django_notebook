@@ -10,5 +10,5 @@ urlpatterns = [
     url(r'^bbox(?P<box_id>[0-9]+)/$',views.single,name='kwargs'),
     url(r'^detailview(?P<pk>\d+)/$',views.boxDetailView.as_view(),name='class'),
     url(r'^listview(?P<pke>\d+)/$',views.boxListView.as_view(),name='list_view'),
-    
+    url(r'^add_box/$',views.add_box,name='add'),       
 ]
