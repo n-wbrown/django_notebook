@@ -11,8 +11,17 @@
 {% block content%}
     <div class="container-fluid">
     {% if box  %}
+    <div class="row">
+    <div class="col-md-6">
     <h2>table of boxes</h2>
     <p>list boxes in bootstrap formatted table</p>
+    </div>
+    <div class="col-md-6 my-auto align-items-center ">
+    <a href="{% url 'add' %}">
+    <button type="button" class="btn btn-success">Add Box</button>
+    </a>
+    </div>
+    </div>
     <table class="table table-sm">
     <thead>
         <tr>
@@ -25,7 +34,7 @@
     <tbody>
     {% for b in box  %}
         <tr>
-            <th>{{b.box_name}}</th>
+            <th><a href="{% url 'mod' b.pk %}">{{b.box_name}}</a></th>
             <th>{{b.pk}}</th>
             <th>{{b.mass}}</th>
             <th>{{b.box_color}}</th>

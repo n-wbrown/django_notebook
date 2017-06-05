@@ -17,6 +17,7 @@ from .forms import configureBox
 
 from django.core.urlresolvers import reverse
 
+from django.shortcuts import get_object_or_404
 
  
 class HomePageView(TemplateView):
@@ -87,10 +88,10 @@ def add_box(request):
             new_box = box()
             new_box.mass = form.cleaned_data['new_mass']
             new_box.box_name = form.cleaned_data['new_name']
-            new_box.color = form.cleaned_data['new_color']
+            new_box.colors = form.cleaned_data['new_color']
             new_box.save()
             # redirect to a new URL:
-            return HttpResponseRedirect(reverse('home'))
+            return HttpResponseRedirect(reverse('list_view'))
 
     else:
         #proposed_mass = form.new_mass * -1
@@ -98,4 +99,30 @@ def add_box(request):
         form = configureBox()
 
     return render(request, 'addbox.html', {'form': form,})
-        
+ 
+
+
+def mod_box(request,pk):
+    box_inst=get_object_or_404(box, pk = pk)
+    
+    if request.method == 'POST':
+        form = configureBox(request.POST)
+       
+        if form.is_valid():
+            box_inst.mass = form.cleaned_data['new_mass']
+            box_inst.box_name = form.cleaned_data['new_name']
+            box_inst.colors = form.cleaned_data['new_color']
+            box_inst.save()
+            # redirect to a new URL:
+            return HttpResponseRedirect(reverse('list_view'))
+
+    else:
+        fill_in = {
+            'new_mass':box_inst.mass,
+            'new_name':box_inst.box_name,
+            'new_color':box_inst.colors,
+        }
+        form=configureBox(initial = fill_in)
+
+
+    return render(request, 'addbox.html', {'form': form,})

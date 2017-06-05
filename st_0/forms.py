@@ -1,8 +1,10 @@
 from django import forms
 from .models import box
 class configureBox(forms.Form):
+    
     class Meta:
         model = box
+    
     new_name = forms.CharField(
         label="Box Name",
         max_length=10, 
@@ -32,3 +34,5 @@ class configureBox(forms.Form):
         if data < 0 :
             raise ValidationError(_('Negative mass!'))
         return data
+
+

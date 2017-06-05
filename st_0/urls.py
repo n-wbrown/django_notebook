@@ -9,6 +9,7 @@ urlpatterns = [
     url(r'^box([0-9]+)/$',views.single,name='args'),
     url(r'^bbox(?P<box_id>[0-9]+)/$',views.single,name='kwargs'),
     url(r'^detailview(?P<pk>\d+)/$',views.boxDetailView.as_view(),name='class'),
-    url(r'^listview(?P<pke>\d+)/$',views.boxListView.as_view(),name='list_view'),
+    url(r'^listview/$',views.boxListView.as_view(),name='list_view'),
     url(r'^add_box/$',views.add_box,name='add'),       
+    url(r'^mod_box/(?P<pk>\d+)/$',views.mod_box,name='mod'),       
 ]
