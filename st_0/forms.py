@@ -28,11 +28,31 @@ class configureBox(forms.Form):
         choices = box.colors,
         widget=forms.Select(attrs={'class': 'custom-select',}),
     )
-
+    
+    extra_count = forms.CharField(
+        label="count Field",
+        widget=forms.HiddenInput()
+    )
+    
     def clean_new_mass(self):
         data = self.cleaned_data['new_mass']
         if data < 0 :
             raise ValidationError(_('Negative mass!'))
         return data
+
+    def __init__(self,*args,**kwargs):
+        #print(args,kwargs)
+        extra_fields=kwargs.pop('extra',0)
+        super().__init__(*args,**kwargs)
+
+        self.fields['extra_count'].initial = extra_fields
+
+
+        for index in range(int(extra_fields)):
+            # generate extra fields in the number specified via extra_fields
+            self.fields['extra_field_{index}'.format(index=index)] = forms.CharField()
+
+
+
 
 

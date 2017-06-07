@@ -75,6 +75,7 @@ class boxListView(generic.ListView):
         return new_context
 
 def add_box(request):
+    print(request.POST)
     if request.method == 'POST':
 
         # Create a form instance and populate it with data from the request (binding):
@@ -96,17 +97,19 @@ def add_box(request):
     else:
         #proposed_mass = form.new_mass * -1
         #form = configureBox(initial={'new_mass': proposed_mass,})
-        form = configureBox()
+        form = configureBox(initial={'extra_count':0,})
 
     return render(request, 'addbox.html', {'form': form,})
  
 
 
 def mod_box(request,pk):
+    for x in request.POST:
+        print(x, request.POST[x])
     box_inst=get_object_or_404(box, pk = pk)
     
     if request.method == 'POST':
-        form = configureBox(request.POST)
+        form = configureBox(request.POST, extra=request.POST.get('extra_count'))
        
         if form.is_valid():
             box_inst.mass = form.cleaned_data['new_mass']

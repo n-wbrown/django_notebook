@@ -16,7 +16,11 @@
 	
 	<!-- Local compiled JavaScript -->
 	<script src="{% static 'dist-bootstrap-4.0.0/js/bootstrap.min.js' %}"></script>
-
+    
+    <script>
+	{% block script %}
+    {% endblock %}
+    </script>
   <style>
     body {
       padding-top: 1em;

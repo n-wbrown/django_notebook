@@ -16,3 +16,4 @@ class box(models.Model):
     def __str__(self):
         return self.box_name
 
+

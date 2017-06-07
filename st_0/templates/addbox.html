@@ -1,5 +1,25 @@
 {% extends 'debug_base.html'%}
 
+{% block script%}
+$(document).ready(function(){
+    form_count = Number($("[name=extra_count]").val());
+    $("#addentry").click(function(){
+        form_count ++;
+        
+        $("tbody").append(" <tr><th>a:extra</th><th>b:extra</th></tr>.");
+
+        $("[name=extra_count]").val(form_count);
+    
+    
+        element = $('<input type="text"/>');
+    	element.attr('name', 'extra_field_' + (form_count-1).toString());
+    	$("form").append(element);
+    	// build element and append it to our forms container
+    
+    });
+});
+{% endblock %}
+
 {% block title %}
 Add box
 {% endblock %}
@@ -36,9 +56,39 @@ Add box
         {{form.new_color}} 
         </div>
     </div>
-    
+    {{form.extra_count}}
+    errors:
+    {{ form.errors }}
+    non_field_errors:
+    {{ form.non_field_errors }}
     </table>
-    <input type="submit" value="Submit" />
+    <input class="btn btn-primary" type="submit" value="Submit" />
 </form>
 <br> 
+
+    <table class="table table-sm">
+        <thead>
+            <tr>
+            <th>
+            col a
+            </th>
+            <th>
+            col b
+            </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+            <th>a1</th>
+            <th>b1</th>
+            </tr>
+            <tr>
+            <th>a2</th>
+            <th>b2</th>
+            </tr>
+        </tbody>
+    </table>
+
+<button class="btn btn-primary" id="addentry">add</button>
+<!--{{form.as_p}}-->
 {% endblock %}
