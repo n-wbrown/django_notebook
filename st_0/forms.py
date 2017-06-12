@@ -13,6 +13,13 @@ class indivTrigger(forms.Form):
         }
     ))
 
+    def clean_name(self):
+        data = self.cleaned_data['name']
+        if len(data) <= 0 :
+            raise forms.ValidationError(_('No Name'))
+        # if 1:
+        # raise forms.ValidationError("ERROR",code="bad")
+        return data
 
 
 class configureBox(forms.Form):
@@ -43,7 +50,7 @@ class configureBox(forms.Form):
         choices = box.colors,
         widget=forms.Select(attrs={'class': 'custom-select',}),
     )
-    
+
     extra_count = forms.CharField(
         label="count Field",
         widget=forms.HiddenInput()
@@ -56,13 +63,13 @@ class configureBox(forms.Form):
             raise ValidationError(_('Negative mass!'))
         return data
 
+
     def __init__(self,*args,**kwargs):
-        print("from forms:",args,kwargs)
+        # print("from forms:",args,kwargs)
         extra_fields=kwargs.pop('extra',0)
         super().__init__(*args,**kwargs)
 
         self.fields['extra_count'].initial = extra_fields
-
 
         for index in range(int(extra_fields)):
             # generate extra fields in the number specified via extra_fields

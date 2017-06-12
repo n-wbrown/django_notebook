@@ -58,7 +58,10 @@ $(document).ready(function(){
 
 
     
-     function delete_handler() {
+    function delete_handler() {
+        if ( $('input[name=cts-TOTAL_FORMS]').val() <= 1 ){
+            return;
+        }
         //var test = $(this);
         console.log(this);
         console.log($(this));
@@ -167,6 +170,7 @@ Add box
 
     <b> Box Contents </b>
     {{cform.errors}}{{cform.non_field_errors}}
+
     {{ cform.management_form }} 
     <div id='contents_div'>
     {% for c in cform %}

@@ -93,14 +93,14 @@ def add_box(request):
             new_box.box_name = form.cleaned_data['new_name']
             new_box.colors = form.cleaned_data['new_color']
             new_box.save()
-            #print("\nCLEAN:   ", form.cleaned_data,"\n\n") 
+            #print("\nCLEAN:   ", form.cleaned_data,"\n\n")
             for i in range(0,int(form.cleaned_data['extra_count'])):
-                new_item=item(
-                    item_name = form.cleaned_data['extra_field_'+str(i)],
+                new_item = item(
+                    item_name = form.cleaned_data['extra_field_' + str(i)],
                     container = new_box,
                 )
                 new_item.save()
-            
+
             # redirect to a new URL:
             return HttpResponseRedirect(reverse('list_view'))
 
@@ -114,7 +114,7 @@ def add_box(request):
 
 
 def mod_box(request,pk):
-    for x in request.POST:
+    for x in sorted(request.POST):
         print(x, request.POST[x])
     box_inst=get_object_or_404(box, pk = pk)
      
@@ -124,8 +124,21 @@ def mod_box(request,pk):
 
     if request.method == 'POST':
         form = configureBox(request.POST, extra=request.POST.get('extra_count'))
-        cform = cformset(request.POST)
-       
+        cform = cformset(request.POST,prefix="cts")
+        # cform.is_valid()
+        for x in cform:
+            if x.is_valid() and len(x.cleaned_data)>0:
+                # print('cleaned',x.cleaned_data)
+                 if x.cleaned_data.get('name') not in [z.item_name for z in box_inst.item_set.all()]:
+                    #  print("NEW")
+                     new_item = item()
+                     new_item.item_name = x.cleaned_data.get('name')
+                     new_item.container = box_inst
+                     new_item.save()
+        # print("UNCLEAN!: ", cform.cleaned_data)
+        # for u in filter( lambda z: (z.get('name') != None), cform.cleaned_data):
+        #     print(u)
+        
         if form.is_valid():
             box_inst.mass = form.cleaned_data['new_mass']
             box_inst.box_name = form.cleaned_data['new_name']
