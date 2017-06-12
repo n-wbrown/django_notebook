@@ -7,6 +7,7 @@ class indivTrigger(forms.Form):
     name = forms.CharField(
         label="EEE",
         max_length=30,
+        required=False,
         widget=forms.TextInput(attrs={
             'placeholder': 'CUSTOM! Text',
             'id_extras': 'PREFIX',
@@ -15,8 +16,10 @@ class indivTrigger(forms.Form):
 
     def clean_name(self):
         data = self.cleaned_data['name']
-        if len(data) <= 0 :
-            raise forms.ValidationError(_('No Name'))
+        # if len(data) <= 0 :
+        #     # raise forms.ValidationError(_('No Name'))
+        #     raise forms.ValidationError("ERROR",code="bad")
+
         # if 1:
         # raise forms.ValidationError("ERROR",code="bad")
         return data
@@ -73,7 +76,7 @@ class configureBox(forms.Form):
 
         for index in range(int(extra_fields)):
             # generate extra fields in the number specified via extra_fields
-            self.fields['extra_field_{index}'.format(index=index)] = forms.CharField( label = 'extra_field_{index}'.format(index=index))
+            self.fields['extra_field_{index}'.format(index=index)] = forms.CharField( required=False, label = 'extra_field_{index}'.format(index=index))
             #self.fields['extra_field_{index}'.format(index=index)] = forms.CharField()
 
 

@@ -21,6 +21,8 @@ from django.shortcuts import get_object_or_404
 
 from django.forms.formsets import formset_factory
 
+from django.db import transaction, IntegrityError
+
  
 class HomePageView(TemplateView):
     def get(self, request, **kwargs):
@@ -126,24 +128,46 @@ def mod_box(request,pk):
         form = configureBox(request.POST, extra=request.POST.get('extra_count'))
         cform = cformset(request.POST,prefix="cts")
         # cform.is_valid()
-        for x in cform:
-            if x.is_valid() and len(x.cleaned_data)>0:
-                # print('cleaned',x.cleaned_data)
-                 if x.cleaned_data.get('name') not in [z.item_name for z in box_inst.item_set.all()]:
-                    #  print("NEW")
-                     new_item = item()
-                     new_item.item_name = x.cleaned_data.get('name')
-                     new_item.container = box_inst
-                     new_item.save()
+
+        # for x in cform:
+        #     if x.is_valid() and len(x.cleaned_data)>0:
+        #         # print('cleaned',x.cleaned_data)
+        #          if x.cleaned_data.get('name') not in [z.item_name for z in box_inst.item_set.all()]:
+        #             #  print("NEW")
+        #              new_item = item()
+        #              new_item.item_name = x.cleaned_data.get('name')
+        #              new_item.container = box_inst
+        #              new_item.save()
+
+
         # print("UNCLEAN!: ", cform.cleaned_data)
         # for u in filter( lambda z: (z.get('name') != None), cform.cleaned_data):
         #     print(u)
         
-        if form.is_valid():
+        if form.is_valid() and cform.is_valid():
+            new_cforms = []
+            for x in cform:
+                if len(x.cleaned_data) <= 0 : 
+                    continue;
+                u = item(item_name = x.cleaned_data.get('name'),container=box_inst)
+                new_cforms.append(u)
+
+
             box_inst.mass = form.cleaned_data['new_mass']
             box_inst.box_name = form.cleaned_data['new_name']
             box_inst.colors = form.cleaned_data['new_color']
             box_inst.save()
+
+            try:
+                with transaction.atomic():
+                    box_inst.item_set.all().delete()
+                    item.objects.bulk_create(new_cforms)
+            
+            except IntegrityError:
+                print("DB UPDATE FAILURE")
+
+
+
             # redirect to a new URL:
             return HttpResponseRedirect(reverse('list_view'))
 
