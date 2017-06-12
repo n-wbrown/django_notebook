@@ -1,5 +1,20 @@
 from django import forms
 from .models import box
+
+
+
+class indivTrigger(forms.Form):
+    name = forms.CharField(
+        label="EEE",
+        max_length=30,
+        widget=forms.TextInput(attrs={
+            'placeholder': 'CUSTOM! Text',
+            'id_extras': 'PREFIX',
+        }
+    ))
+
+
+
 class configureBox(forms.Form):
     
     class Meta:
@@ -33,6 +48,7 @@ class configureBox(forms.Form):
         label="count Field",
         widget=forms.HiddenInput()
     )
+
     
     def clean_new_mass(self):
         data = self.cleaned_data['new_mass']
@@ -41,7 +57,7 @@ class configureBox(forms.Form):
         return data
 
     def __init__(self,*args,**kwargs):
-        #print(args,kwargs)
+        print("from forms:",args,kwargs)
         extra_fields=kwargs.pop('extra',0)
         super().__init__(*args,**kwargs)
 
@@ -50,7 +66,8 @@ class configureBox(forms.Form):
 
         for index in range(int(extra_fields)):
             # generate extra fields in the number specified via extra_fields
-            self.fields['extra_field_{index}'.format(index=index)] = forms.CharField()
+            self.fields['extra_field_{index}'.format(index=index)] = forms.CharField( label = 'extra_field_{index}'.format(index=index))
+            #self.fields['extra_field_{index}'.format(index=index)] = forms.CharField()
 
 
 

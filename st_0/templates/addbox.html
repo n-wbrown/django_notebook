@@ -1,12 +1,24 @@
 {% extends 'debug_base.html'%}
 
 {% block script%}
+
+
+
 $(document).ready(function(){
     form_count = Number($("[name=extra_count]").val());
+    //form_count = {{extra_count_var}};
+/*
+    for (i = 0; i < form_count; i++) { 
+        element = $('<input type="text"/>');
+    	element.attr('name', 'extra_field_' + (i).toString());
+        element.attr('value',
+    	$("form").append(element);
+    }
+*/
     $("#addentry").click(function(){
         form_count ++;
         
-        $("tbody").append(" <tr><th>a:extra</th><th>b:extra</th></tr>.");
+        //$("tbody").append(" <tr><th>a:extra</th><th>b:extra</th></tr>.");
 
         $("[name=extra_count]").val(form_count);
     
@@ -17,8 +29,76 @@ $(document).ready(function(){
     	// build element and append it to our forms container
     
     });
+
+    var next_contents_no = $('input[name=cts-TOTAL_FORMS]').val();
+    // handle line creation
+    $("#addentry2").click(function(){
+        var new_contents = $("#contents_div").children().last().clone();
+        new_contents.find("input[id*=id_cts-]").attr('id','id_cts-'+next_contents_no.toString()+'-name');
+        new_contents.find("input[name*=cts-]").attr('name','cts-'+next_contents_no.toString()+'-name');
+        new_contents.find("input[name*=cts-]").val("");
+        $("#contents_div").append(new_contents);
+        
+        var cache = $("input[name=cts-TOTAL_FORMS]").val();
+        console.log(cache);
+        $("input[name=cts-TOTAL_FORMS]").val(Number(cache)+1);
+
+        next_contents_no ++;
+        console.log("click2");
+
+        
+        new_contents.find(".delete-button").click(delete_handler);
+
+
+
+
+
+
+    });
+
+
+    
+     function delete_handler() {
+        //var test = $(this);
+        console.log(this);
+        console.log($(this));
+        $(this).attr('class',"btn btn-danger text-muted")
+        //this.innerHTML = "keep this!";
+        $(this).parent().parent().remove();
+        //console.log($(this)[0].innerHTML); 
+        console.log("click_del");
+        var cache = $("input[name=cts-TOTAL_FORMS]").val();
+        console.log(cache);
+        $("input[name=cts-TOTAL_FORMS]").val(Number(cache)-1);
+    }
+
+
+    // handle line deletion
+
+    $(".delete-button").click(delete_handler);
+
+
+
+
+
 });
+
 {% endblock %}
+
+{% block header_extra %}
+{% load static %}
+<script src="{% static 'jquery.formset.js' %}"></script>
+
+<script type="text/javascript">
+    $('.link-formset').formset({
+        addText: 'add link',
+        deleteText: 'remove',
+        prefix: 'EE',
+    });
+</script>
+
+{% endblock %}
+
 
 {% block title %}
 Add box
@@ -57,15 +137,58 @@ Add box
         </div>
     </div>
     {{form.extra_count}}
+    <!--
     errors:
     {{ form.errors }}
     non_field_errors:
     {{ form.non_field_errors }}
+    -->
+    <div class = "form-group row">
+        <label for="id_new_name" class="col-sm-10 col-form-label">
+        <b>Box Contents</b>
+        </label>
+    </div>
+    {% for input in form %}
+        {% if 'extra_field_' in input.label %}
+    <div class="form-group row">
+        <label for="id_new_name"class="col-sm-2 col-form-label">
+            {{input.label}}:
+        </label>
+        <div class="col-sm-8">
+        {{input}}
+        {{input.name}}
+        </div>
+    </div>
+
+        {% endif %}
+    {% endfor %}
+    
     </table>
+
+    <b> Box Contents </b>
+    {{cform.errors}}{{cform.non_field_errors}}
+    {{ cform.management_form }} 
+    <div id='contents_div'>
+    {% for c in cform %}
+        
+        <div class="form-group row">
+        <label class="col-sm-2 col-form-label">
+        {{c.name.label}}
+        </label>
+        <div class="col-sm-6">
+        {{c.name}}
+        </div>
+        <div class="col-sm-2">
+        <button class="btn btn-primary delete-button" type="button">delete_row</button>
+        </div>
+        </div>
+    {% endfor %}
+    </div>
+
     <input class="btn btn-primary" type="submit" value="Submit" />
 </form>
 <br> 
-
+<!--
     <table class="table table-sm">
         <thead>
             <tr>
@@ -88,7 +211,8 @@ Add box
             </tr>
         </tbody>
     </table>
-
+-->
 <button class="btn btn-primary" id="addentry">add</button>
+<button class="btn btn-primary" id="addentry2">add(2)</button>
 <!--{{form.as_p}}-->
 {% endblock %}

@@ -16,4 +16,6 @@ class box(models.Model):
     def __str__(self):
         return self.box_name
 
-
+class item(models.Model):
+    item_name = models.CharField(max_length=50)
+    container = models.ForeignKey(box,on_delete=models.CASCADE)

@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 from django.http import HttpResponse, HttpResponseRedirect
 
-from .models import box 
+from .models import box, item 
 from django.db.models import Q
 
 from django.views import generic
@@ -13,11 +13,13 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 
-from .forms import configureBox
+from .forms import configureBox, indivTrigger
 
 from django.core.urlresolvers import reverse
 
 from django.shortcuts import get_object_or_404
+
+from django.forms.formsets import formset_factory
 
  
 class HomePageView(TemplateView):
@@ -75,11 +77,11 @@ class boxListView(generic.ListView):
         return new_context
 
 def add_box(request):
-    print(request.POST)
+    #print(request.POST)
     if request.method == 'POST':
 
         # Create a form instance and populate it with data from the request (binding):
-        form = configureBox(request.POST)
+        form = configureBox(request.POST,extra=request.POST['extra_count'])
 
         # Check if the form is valid:
         if form.is_valid():
@@ -91,6 +93,14 @@ def add_box(request):
             new_box.box_name = form.cleaned_data['new_name']
             new_box.colors = form.cleaned_data['new_color']
             new_box.save()
+            #print("\nCLEAN:   ", form.cleaned_data,"\n\n") 
+            for i in range(0,int(form.cleaned_data['extra_count'])):
+                new_item=item(
+                    item_name = form.cleaned_data['extra_field_'+str(i)],
+                    container = new_box,
+                )
+                new_item.save()
+            
             # redirect to a new URL:
             return HttpResponseRedirect(reverse('list_view'))
 
@@ -107,9 +117,14 @@ def mod_box(request,pk):
     for x in request.POST:
         print(x, request.POST[x])
     box_inst=get_object_or_404(box, pk = pk)
+     
+    item_cache = box_inst.item_set.all()
     
+    cformset = formset_factory(indivTrigger)
+
     if request.method == 'POST':
         form = configureBox(request.POST, extra=request.POST.get('extra_count'))
+        cform = cformset(request.POST)
        
         if form.is_valid():
             box_inst.mass = form.cleaned_data['new_mass']
@@ -124,8 +139,17 @@ def mod_box(request,pk):
             'new_mass':box_inst.mass,
             'new_name':box_inst.box_name,
             'new_color':box_inst.colors,
+            'extra_count':len(item_cache),
         }
-        form=configureBox(initial = fill_in)
+        for i in range(0,len(item_cache)):
+            fill_in['extra_field_'+str(i)] = item_cache[i].item_name
+
+        form=configureBox(initial = fill_in, extra=len(item_cache))
+        zz =[{'name': l.item_name,} for l in box_inst.item_set.all()]
+        #zz = [{'name': box_inst.item_set.all()[0].item_name}]
+        #print("ZZ: ",zz)
+        cform = cformset(initial=zz,prefix="cts")
 
 
-    return render(request, 'addbox.html', {'form': form,})
+
+    return render(request, 'addbox.html', {'form': form,'cform':cform,'extra_count_var':len(item_cache)})
